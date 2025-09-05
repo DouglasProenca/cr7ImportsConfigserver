@@ -9,5 +9,5 @@ spring:
            uri: https://github.com/DouglasProenca/Microservicos-CR7Imports-Repository
            default-label: main 
 
-  server:
-      port: 8889  
+server:
+  port: 8889  
