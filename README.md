@@ -9,7 +9,6 @@ O Spring Cloud Config oferece suporte do lado do servidor e do lado do cliente p
 
 - ``Java 8``
 - ``Eclipse IDEA``
-- ``Jasper``
 - ``Docker``
 - ``Spring Cloud Config Server``
 
