@@ -1,0 +1,40 @@
+name: Build Docker Image Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Get POM version
+      id: pom-version
+      uses: CptMokoena/maven-get-version-action@main
+
+    - name: Build Application JAR
+      run: mvn clean package -DskipTests
+
+    - name: Build and push multi-arch Docker Image
+      run: |
+        # Build and push the image for both amd64 and arm64 architectures
+        # -t ${{ secrets.DOCKER_USERNAME }}/cr7-imports-configserver:${{ github.run_id }} \
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t ${{ secrets.DOCKER_USERNAME }}/cr7-imports-configserver:latest \
+          -t ${{ secrets.DOCKER_USERNAME }}/cr7-imports-configserver:${{ steps.pom-version.outputs.version }} \
+          --push \
+          -f Dockerfile .
